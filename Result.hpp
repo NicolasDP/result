@@ -47,7 +47,7 @@
  * // to the function
  * Result<int> devide_2(int input_1, int input_2) {
  *   if (!input_2) {
- *     return Result<int>::err(std::domain_error("division by zero"));
+ *     return Result<int>::Err(std::domain_error("division by zero"));
  *   }
  *   return Result<int>::Ok(input_1 / input_2);
  * }

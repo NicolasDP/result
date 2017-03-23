@@ -69,6 +69,7 @@
 # define RESULT_HPP_
 
 # include <exception>
+# include <stdexcept>
 # include <utility>
 # include <type_traits>
 

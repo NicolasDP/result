@@ -162,7 +162,7 @@ TEST(ResultTest, TestMapResLambdaOk) {
 TEST(ResultTest, TestMapResFail) {
   ASSERT_THROW(
     { get_fib_recursive(-1)
-            .map_res<char>([](auto i) { return i + 1; })
+            .map_res<char>([](int i) { return i + 1; })
             .unwrap();
     }
   , std::exception

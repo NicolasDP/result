@@ -204,26 +204,26 @@ class Result {
   ///                 .map_res([](int&& i) { return my_data(i); })
   ///                 .unwrap();
   /// @endcode
-  template<typename RR>
-  Result<RR, error_type> map_res(std::function<RR(return_type&&)>);
+  template<typename RR, typename F>
+  Result<RR, error_type> map_res(F);
 
   /// @brief map the error of the given result
   ///
   /// you can update the error with more information or change its type
-  template<typename EE>
-  Result<return_type, EE> map_err(std::function<EE(error_type&&)>);
+  template<typename EE, typename F>
+  Result<return_type, EE> map_err(F);
 
   /// @brief if the Result is successful, call the next function
-  template<typename RR>
-  Result<RR, error_type> and_then(std::function<Result<RR, error_type>(return_type&&)> f) {
+  template<typename RR, typename F>
+  Result<RR, error_type> and_then(F f) {
     if (this->is_error()) {
       return Result<RR, error_type>::Err(this->get_error());
     }
     return f(this->get_return());
   }
   /// @brief if the Result has error, call the next function
-  template<typename RR>
-  Result<RR, error_type> or_else(std::function<Result<RR, error_type>(error_type&&)> f) {
+  template<typename RR, typename F>
+  Result<RR, error_type> or_else(F f) {
     if (this->is_ok()) {
       return Result<RR, error_type>::Ok(this->get_return());
     }
@@ -285,15 +285,15 @@ bool Result<R, E>::is_error() const noexcept { return this->internal_.which() ==
 /* Non-const accessors */
 
 template<typename R, typename E>
-template<typename RR>
-Result<RR, E> Result<R, E>::map_res(std::function<RR(return_type&&)> f) {
+template<typename RR, typename F>
+Result<RR, E> Result<R, E>::map_res(F f) {
   if (this->is_error()) { return Result<RR, E>::Err(this->get_error()); }
   return Result<RR, E>::Ok(f(this->get_return()));
 }
 
 template<typename R, typename E>
-template<typename EE>
-Result<R, EE> Result<R, E>::map_err(std::function<EE(E&&)> f) {
+template<typename EE, typename F>
+Result<R, EE> Result<R, E>::map_err(F f) {
   if (this->is_ok()) { return Result<R, EE>::Ok(this->get_return()); }
   return Result<R, EE>::Err(f(this->get_error()));
 }

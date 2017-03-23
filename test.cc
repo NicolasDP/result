@@ -133,7 +133,6 @@ TEST(FibRecursive, TestOk) {
   ASSERT_EQ(r, 89);
 }
 
-char to_char(int&& i) { return static_cast<char>(i); }
 int  by_two(int&& i) { return i * 2; }
 Result<int>  by_two_(int&& i) { return Result<int>::Ok(i * 2); }
 TEST(ResultTest, TestMapResOk) {
@@ -141,7 +140,7 @@ TEST(ResultTest, TestMapResOk) {
 
   ASSERT_NO_THROW(
     { c = get_fib_recursive(10)
-                .map_res<char>(to_char)
+                .map_res<char>([](int&&i) {return static_cast<char>(i); } )
                 .unwrap();
     }
   );
@@ -163,7 +162,7 @@ TEST(ResultTest, TestMapResLambdaOk) {
 TEST(ResultTest, TestMapResFail) {
   ASSERT_THROW(
     { get_fib_recursive(-1)
-            .map_res<char>(to_char)
+            .map_res<char>([](auto i) { return i + 1; })
             .unwrap();
     }
   , std::exception

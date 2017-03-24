@@ -5,10 +5,12 @@
 
 ## Installation
 
-**Prerequisites:**
-
-* GCC-5.x or clang-3.5
 * libboost-variant
+
+compilers:
+
+* Linux GCC: **4.8.4**, **5.4.2** and **6.2.0**
+* Apple LLVM version 7.3.0
 
 **Instructions:**
 

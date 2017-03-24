@@ -1,19 +1,55 @@
-language: cpp
 sudo: false
+
+language: c++
+
 dist: trusty
 
-addons:
-  apt:
-    sources: &sources
-      - ubuntu-toolchain-r-test
-      - boost-latest
-    packages:
-      - cmake
-      - cmake-data
-      - libboost-dev
+matrix:
+  include:
+    - os: linux
+      compiler: g++
+      env: COMPILER_VERSION=4
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - cmake
+            - libboost-dev
+    - os: osx
+      compiler: clang++
+      addons:
+        apt:
+          packages:
+            - cmake
+            - libboost-dev
+    - os: linux
+      compiler: g++
+      env: COMPILER_VERSION=5
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+            - cmake
+            - libboost-dev
+    - os: linux
+      compiler: g++
+      env: COMPILER_VERSION=6
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+            - cmake
+            - libboost-dev
 
-compiler:
-  - g++
+before_install:
+  - if [ "${COMPILER_VERSION}" == "4" ]; then export CXX=g++; fi
+  - if [ "${COMPILER_VERSION}" == "5" ]; then export CXX=g++-5; fi
+  - if [ "${COMPILER_VERSION}" == "6" ]; then export CXX=g++-6; fi
 
 install:
   - git clone https://github.com/google/googletest googletest

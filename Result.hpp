@@ -47,9 +47,9 @@
  * // to the function
  * Result<int> devide_2(int input_1, int input_2) {
  *   if (!input_2) {
- *     return Result<int>::Err(std::domain_error("division by zero"));
+ *     return std::domain_error("division by zero");
  *   }
- *   return Result<int>::Ok(input_1 / input_2);
+ *   return input_1 / input_2;
  * }
  * @encode
  *
@@ -86,7 +86,7 @@
 /// Result<int> my_func1();
 /// Result<int> my_func2() {
 ///   int i = TRY(my_func1());
-///   return Result<int>::Ok(i % 2);
+///   return i % 2;
 /// }
 /// @encode
 ///
@@ -114,9 +114,6 @@
 template<typename R, typename E = std::exception>
 class Result {
   static_assert( std::is_base_of<std::exception, E>::value
-                 && (    std::is_move_constructible<R>::value
-                      || std::is_copy_constructible<R>::value
-                    )
                , "expecting error type to be base of std::exception"
                );
 
@@ -135,6 +132,11 @@ class Result {
   Result()                          = delete;
   Result(Result const&)             = delete;
   Result(Result&&)                  = default;
+
+  // non explicit constructor for the return_type
+  Result(return_type&&);
+  // non explicit constructor for the error_type
+  Result(error_type&&);
 
   /// @brief create a result containing a result object
   ///
@@ -240,9 +242,6 @@ class Result {
   /// @}
 
  private:
-  // private constructors
-  explicit Result(return_type&&);
-  explicit Result(error_type&&);
 
   // private getters
   return_type get_return() const noexcept(false);

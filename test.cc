@@ -36,16 +36,16 @@
 #include "Result.hpp"
 
 Result<int> get_fib_recursive(int n) {
-  if (n < 0) { return Result<int>::Err(std::exception()); }
-  if (n == 0) { return Result<int>::Ok(1); }
-  if (n == 1) { return Result<int>::Ok(1); }
+  if (n < 0) { return std::exception(); }
+  if (n == 0) { return 1; }
+  if (n == 1) { return 1; }
 
   int n_1 = TRY(get_fib_recursive(n - 1));
   int n_2 = TRY(get_fib_recursive(n - 2));
-  return Result<int>::Ok(n_1 + n_2);
+  return n_1 + n_2;
 }
 Result<int> get_fib_iterative(int n) {
-  if (n < 0) { return Result<int>::Err(std::exception()); }
+  if (n < 0) { return std::exception(); }
 
   int n_1 = 1;
   int n_2 = 0;
@@ -54,7 +54,7 @@ Result<int> get_fib_iterative(int n) {
     n_2 = n_1;
     n_1 = next;
   }
-  return Result<int>::Ok(std::move(n_1));
+  return n_1;
 }
 
 TEST(ResultTest, CreateOk) {
@@ -134,7 +134,7 @@ TEST(FibRecursive, TestOk) {
 }
 
 int  by_two(int&& i) { return i * 2; }
-Result<int>  by_two_(int&& i) { return Result<int>::Ok(i * 2); }
+Result<int>  by_two_(int&& i) { return i * 2; }
 TEST(ResultTest, TestMapResOk) {
   char c;
 

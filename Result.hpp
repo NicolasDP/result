@@ -135,6 +135,7 @@ class Result {
 
   // non explicit constructor for the return_type
   Result(return_type&&);
+  Result(return_type&);
   // non explicit constructor for the error_type
   Result(error_type&&);
 
@@ -321,6 +322,8 @@ R Result<R, E>::expect(EE const& err) noexcept(false) {
 
 template<typename R, typename E>
 Result<R, E>::Result(R&& ret) : internal_(std::move(ret)) { }
+template<typename R, typename E>
+Result<R, E>::Result(R& ret)  : internal_(ret) { }
 template<typename R, typename E>
 Result<R, E>::Result(E&& err) : internal_(std::move(err)) { }
 
